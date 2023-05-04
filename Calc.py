@@ -497,18 +497,32 @@ class Calc(QWidget):
             for item in s:
                 mas1.extend(item.split('-'))
             for item in mas1:
-                mas2.extend(item.split('*'))
+                mas2.extend(item.split('('))
             for item in mas2:
-                mas3.extend(item.split('/'))
+                mas3.extend(item.split(')'))
             for item in mas3:
-                mas4.extend(item.split('('))
+                mas4.extend(item.split('/'))
             for item in mas4:
-                mas5.extend(item.split(')'))
-            point_count = 0
+                mas5.extend(item.split('*'))
+            point_count1 = 0
+            point_count2 = 0
             for item in mas5:
                 if '.' in item:
                     num_digits = len(item.split('.')[-1])
-                    point_count = max(point_count, num_digits)
+                    point_count1 = max(point_count1, num_digits)
+            for item in mas4:
+                mas = []
+                if '*' in item:
+                    c = 1
+                    count_umn = []
+                    mas.append(str(item))
+                    mas = str(mas).split('*')
+                    for i in range(len(mas)):
+                        count_umn.append(len(str(mas[i]).split('.')[-1]))
+                        c *= count_umn[i]
+                    point_count2 = max(c, point_count2)
+
+            point_count = max(point_count1, point_count2)
 
             result = round(eval(self.line_input.text()), point_count)
             self.line_input.setText(str(result))
