@@ -461,7 +461,7 @@ class Calc(QWidget):
                 self.line_input.setText(self.line_input.text())
 
     def umn(self):
-        if not self.ar_symbol:
+        if not self.ar_symbol or self.line_input.text().count('*') < 2:
             if self.line_input.text() != 'Ошибка':
                 self.line_input.setText(self.line_input.text() + '*')
                 self.ar_symbol = True
@@ -523,8 +523,15 @@ class Calc(QWidget):
                     point_count2 = max(c, point_count2)
 
             point_count = max(point_count1, point_count2)
-
-            result = round(eval(self.line_input.text()), point_count)
+            str_txt = str(self.line_input.text())
+            math_exp = ''
+            for i in range(len(str_txt)):
+                if str_txt[i] == '(':
+                    if i > 0:
+                        if str_txt[i - 1].isdigit():
+                            math_exp += '*'
+                math_exp += str_txt[i]
+            result = round(eval(math_exp), point_count)
             self.line_input.setText(str(result))
             self.error = False
         except:
